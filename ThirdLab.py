@@ -601,36 +601,5 @@ while flag == True:
         print("System error")
         flag=False
         break 
-           
-            
-
-
-            
-        
-            
-
-
-                
-    
-
-
-        
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     
