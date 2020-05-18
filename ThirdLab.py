@@ -305,23 +305,34 @@ class Gamming(Basic):
     def generate(self):
         self._prodigy_xor()
         alpha_list = self.alpha_xor
-        key_list = []
-        for number in range (len(alpha_list)):
-            key_list.append(number)
-        random.shuffle(key_list)
+        while True:
+            try:
+                gamma = int(input("Please,enter the value of gamma:"))
+            except ValueError:
+                print("Enter the correct value")
+                continue
+            else:
+                if gamma < 1:
+                    print("Wrong value of gamma")
+                    continue
+                break
         print("Please,enter the name of your new key file")
         with open(self.pathcheck("key"),'w',encoding='utf-8') as file_key:
-            for i in range(len(alpha_list)):
-                file_key.write(alpha_list[i]+' - '+str(key_list[i])+'\n')
-            file_key.write("XOR - method")
+            file_key.write(alpha_list[0])
+            for i in range(1,len(alpha_list)):
+                file_key.write(' - '+ alpha_list[i])
+            file_key.write('\n'+str(random.randint(0,len(alpha_list))))
+            for j in range(1,gamma):
+                file_key.write(' - '+str(random.randint(0,len(alpha_list))))
+            file_key.write('\n'+"XOR - method")
 
     def _cryptod_xor(self):
             print("Enter the name of your key file")
             self.dict_xor = ()
             with open(self.pathcheck("key"),'r',encoding='utf-8') as checkfile:
                     size_key = len(checkfile.readlines()) - 1
-                    list_gamma = [x for x in range(size_key)]
-                    list_alpha = list_gamma.copy()
+                    list_gamma = []
+                    list_alpha = []
                     checkfile.seek(0)
                     for i in range(size_key):
                         checkfile.readline()
@@ -331,10 +342,10 @@ class Gamming(Basic):
                     else:
                         return(False) 
                     checkfile.seek(0)
-                    for i in range(size_key): 
-                        line = checkfile.readline().rstrip().split(' - ') 
-                        list_gamma[i] = line[1]
-                        list_alpha[i] = line[0]       
+                    line1 = checkfile.readline()
+                    list_alpha = line1.rstrip().split(' - ')
+                    line2 = checkfile.readline()
+                    list_gamma = line2.rstrip().split(' - ')
                     return(list_alpha,list_gamma)          
 
     def encrypt(self):
@@ -350,17 +361,6 @@ class Gamming(Basic):
             if cryptodict == False:
                 print("Wrong key file")
             else:
-                while True:
-                    try:
-                        gamma = int(input("Please,enter the value of gamma:"))
-                    except ValueError:
-                        print("Enter the correct value")
-                        continue
-                    else:
-                        if gamma > len(cryptodict[1]) or gamma < 1:
-                            print("Wrong value of gamma")
-                            continue
-                        break
                 if cryptodict == False:
                     print("Wrong key file")
                 else:
@@ -376,7 +376,7 @@ class Gamming(Basic):
                                 flag = False
                         if flag == True:
                             new_letter = int(letter) + int(cryptodict[1][count])
-                            if count == gamma:
+                            if count == len(cryptodict[1])-1:
                                 count = 0
                             count += 1
                             new_letter = new_letter % len(cryptodict[0])
@@ -386,7 +386,7 @@ class Gamming(Basic):
                 print("Please,name your new crypted file")            
                 with open(self.pathcheck("encode"),'w',encoding='utf-8') as encrypt_file:
                     encrypt_file.write(new_line)
-                    encrypt_file.write("\nXOR - " + str(gamma))
+                    encrypt_file.write("\nXOR - method")
                 text_file.close()
                 er = False
 
@@ -433,7 +433,7 @@ class Gamming(Basic):
                         if flag == True:
                             new_letter = letter + len(cryptodict[0])
                             new_letter = new_letter - int(cryptodict[1][count])
-                            if count == int(method[1]):
+                            if count == len(cryptodict[1])-1:
                                 count = 0
                             count += 1
                             new_letter = new_letter % len(cryptodict[0])
@@ -601,5 +601,4 @@ while flag == True:
         print("System error")
         flag=False
         break 
-
     
