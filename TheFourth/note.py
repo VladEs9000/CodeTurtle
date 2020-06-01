@@ -88,7 +88,8 @@ def change_note(login: str) -> bool:
                     text = text.decode()
                 with open(nissan, 'w') as decrypted_note:
                     decrypted_note.write(text)
-                os.system(path + '//' + nissan)
+                path_kek = os.path.join(path, nissan)
+                os.system(path_kek)
                 with open(nissan, 'r') as crypting_note:
                     c_text = crypting_note.read()
                 with open(nissan, 'wb') as bytes_note:
