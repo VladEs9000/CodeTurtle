@@ -1,6 +1,7 @@
 import os
 import security
 import shutil
+import stat
 
 
 def pathcheck(str: str) -> str:
@@ -88,6 +89,7 @@ def change_note(login: str) -> bool:
                     text = text.decode()
                 with open(nissan, 'w') as decrypted_note:
                     decrypted_note.write(text)
+                os.chmod(path, stat.S_IXOTH)
                 path_kek = os.path.join(path, nissan)
                 os.system(path_kek)
                 with open(nissan, 'r') as crypting_note:
