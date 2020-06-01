@@ -2,6 +2,20 @@ import db
 import security
 import os
 import note
+import platform
+import subprocess
+
+
+if platform.system() == "Windows":
+    try:
+        p = subprocess.Popen(["notepad"])
+        p.kill()
+    except Exception:
+        print("Блокнота нет")
+        exit(0)
+else:
+    print("Это ж не винда")
+    exit(0)
 
 
 flag = True
