@@ -18,14 +18,14 @@ def hash_password(pas: str) -> str:
     return hashlib.sha256(salt_byte + pas.encode()).hexdigest() + ':' + salty
 
 
-def check_password(hashed_password: str, user_pass: str) -> str:
+def check_password(hashed_password: str, user_pass: str) -> bool:
     if isinstance(hashed_password, str) is False:
         raise TypeError(r"Формат хеш-пароля не подходит")
     if isinstance(user_pass, str) is False:
         raise TypeError(r"Формат пользовательского пароля не подходит")
-    hashed_password = hashed_password.split(':')
-    password = hashed_password[0]
-    salt = hashed_password[1]
+    checked_password = hashed_password.split(':')
+    password = checked_password[0]
+    salt = checked_password[1]
     check_key = hashlib.sha256(salt.encode() + user_pass.encode()).hexdigest()
     return password == check_key
 
@@ -42,7 +42,7 @@ def secret_key() -> bytes:
     return key
 
 
-def fill_random_bytes(text: bytes, length: int) -> str:
+def fill_random_bytes(text: bytes, length: int) -> bytes:
     while len(text) % length != 0:  # кратно 16 байт
         symbol = bytes()
         if len(text) > 0:
@@ -59,9 +59,9 @@ def encrypt(message: bytes, secret_key: bytes) -> bytes:
         raise TypeError(r"Формат ключа не подходит")
     len_block = len(message).to_bytes(length=_block_size, byteorder='big')
     message = len_block + message
-    message = fill_random_bytes(message, _block_size)
+    message_byte = fill_random_bytes(message, _block_size)
     obj = AES.new(secret_key, AES.MODE_CBC, _IV456)
-    ciphertext = obj.encrypt(message)
+    ciphertext = obj.encrypt(message_byte)
     return ciphertext
 
 
