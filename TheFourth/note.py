@@ -5,20 +5,28 @@ import stat
 
 
 def pathcheck(str: str) -> str:
-        flag = True
-        while flag:
+        for i in range(3):
+            list_error = ["\\", "/", ":", "*", "?", "\"", "|", "<", ">"]
             way = input("Напишите имя файла.txt заметки(.txt):")
             try:
                 try:
+                    for ch in way:
+                        if list_error.count(ch) != 0:
+                            print("Неправильные символы в файле")
+                            return way, False
                     way_rule = way.split('.')
                     way_rule.reverse()
                     if way_rule[0] == str:
-                        return way
+                        return way, True
                     raise Exception("Неправильно расширение")
                 except Exception:
                     print("Неправильно введенный файл")
+                    i += 1
             except BaseException:
                 print("Не тот ввод")
+                i += 1
+        if i == 3:
+            return way, False
 
 
 def create_note(login: str) -> bool:
@@ -26,7 +34,9 @@ def create_note(login: str) -> bool:
     files = os.listdir(login)
     os.chdir(login)
     for i in range(3):
-        name = pathcheck('txt')
+        name, check = pathcheck('txt')
+        if check is False:
+            return False
         if ' ' in name:
             print("Вы ввели некорректное название")
             i += 1
@@ -59,12 +69,17 @@ def create_note(login: str) -> bool:
 
 def change_note(login: str) -> bool:
     os.chdir('..')
+    list_error = ["\\", "/", ":", "*", "?", "\"", "|", "<", ">"]
     flag = True
     files = os.listdir(login)
     files.remove("maininf.conf")
     files.remove("encodeinf.conf")
     files.remove("secretinf.conf")
     os.chdir(login)
+    kappa = []
+    kappa.append("maininf.conf")
+    kappa.append("encodeinf.conf")
+    kappa.append("secretinf.conf")
     path = os.getcwd()
     with open('secretinf.conf', 'rb') as config_file:
         master_key = config_file.read()
@@ -78,7 +93,10 @@ def change_note(login: str) -> bool:
         print(files)
         while flag:
             nissan = input("Выберите заметку,которую хотите изменить:")
-            if nissan == "maininf.conf":
+            for ch in nissan:
+                if list_error.count(ch) != 0:
+                    print("Неправильные символы в файле")
+            if nissan in kappa:
                 print("Это конфигурационный файл,а не заметка")
             if nissan in files:
                 print("Вы выбрали ", nissan)
@@ -104,12 +122,17 @@ def change_note(login: str) -> bool:
 
 def read_note(login: str) -> bool:
     os.chdir('..')
+    list_error = ["\\", "/", ":", "*", "?", "\"", "|", "<", ">"]
     flag = True
     files = os.listdir(login)
     files.remove("maininf.conf")
     files.remove("encodeinf.conf")
     files.remove("secretinf.conf")
     os.chdir(login)
+    kappa = []
+    kappa.append("maininf.conf")
+    kappa.append("encodeinf.conf")
+    kappa.append("secretinf.conf")
     if len(files) == 0:
         print("Список заметок пуст")
         return True
@@ -117,7 +140,10 @@ def read_note(login: str) -> bool:
     print(files)
     while flag:
         command = input("Выберите заметку которую хотите прочитать:")
-        if command == "maininf.conf" or "secretinf.conf" or "encodeinf.conf":
+        for ch in command:
+            if list_error.count(ch) != 0:
+                print("Неправильные символы в файле")
+        if command in kappa:
             print("Это конфигурационный файл,а не заметка")
         if command in files:
             with open('secretinf.conf', 'rb') as config_file:
@@ -138,12 +164,17 @@ def read_note(login: str) -> bool:
 
 def delete_note(login: str) -> bool:
     os.chdir('..')
+    list_error = ["\\", "/", ":", "*", "?", "\"", "|", "<", ">"]
     flag = True
     files = os.listdir(login)
     files.remove("maininf.conf")
     files.remove("encodeinf.conf")
     files.remove("secretinf.conf")
     os.chdir(login)
+    kappa = []
+    kappa.append("maininf.conf")
+    kappa.append("encodeinf.conf")
+    kappa.append("secretinf.conf")
     if len(files) == 0:
         print("Список заметок пуст")
         return True
@@ -151,7 +182,10 @@ def delete_note(login: str) -> bool:
     print(files)
     while flag:
         command = input("Выберите заметку которую хотите удалить:")
-        if command == "maininf.conf" or "secretinf.conf" or "encodeinf.conf":
+        for ch in command:
+            if list_error.count(ch) != 0:
+                print("Неправильные символы в файле")
+        if command in kappa:
             print("Это конфигурационный файл,а не заметка")
         if command in files:
             print("Вы выбрали ", command)
