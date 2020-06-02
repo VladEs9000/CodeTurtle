@@ -17,7 +17,7 @@ else:
     print("Это ж не винда")
     exit(0)
 
-  
+
 flag = True
 flag_zam = True
 while flag:
@@ -31,10 +31,15 @@ while flag:
         print("\tВыйти из программы - 5")
         command = int(input("Выберите действие:"))
         if command == 1:
-            db.create_new_acc()
+            first = db.create_new_acc()
+            if first is True:
+                print("Аккаунт успешно создан")
+            else:
+                print("Не удалось создать аккаунт")
         if command == 2:
-            login, check = db.auth_acc()
+            login, check, password = db.auth_acc()
             if check is True:
+                print("Вы аутентифицированы")
                 while flag_zam:
                     try:
                         print("Меню работы с заметками")
@@ -47,17 +52,37 @@ while flag:
                         print("\tВыйти из программы - 7")
                         command_note = int(input("Выберите действие:"))
                         if command_note == 1:
-                            note.create_note(login)
+                            com1 = note.create_note(login, password)
+                            if com1 is True:
+                                print("Пустая заметка создана")
+                            else:
+                                print("Вы не смогли создать заметку")
                         if command_note == 2:
-                            note.change_note(login)
+                            com2 = note.change_note(login, password)
+                            if com2 is True:
+                                print("Вы успешно изменили заметку")
+                            else:
+                                print("Вам не удалось изменить заметку")
                         if command_note == 3:
-                            note.delete_note(login)
+                            com3 = note.delete_note(login)
+                            if com3 is True:
+                                print("Заметка удалена")
+                            else:
+                                print("Вы не смогли удалить заметку")
                         if command_note == 4:
-                            note.delete_all_notes(login)
+                            com4 = note.delete_all_notes(login)
+                            if com4 is True:
+                                print("Все заметки удалены")
+                            else:
+                                print("Ничего не произошло")
                         if command_note == 5:
-                            note.note_list(login)
+                            com5 = note.note_list(login)
                         if command_note == 6:
-                            note.read_note(login)
+                            com6 = note.read_note(login, password)
+                            if com6 is True:
+                                print("Заметка прочитана")
+                            else:
+                                print("Вы не смогли прочитать заметку")
                         if command_note == 7:
                             print("Осуществляется выход")
                             exit(0)
@@ -76,9 +101,17 @@ while flag:
                 os.chdir('..')
                 os.chdir('..')
         if command == 3:
-            db.delete_acc()
+            third = db.delete_acc()
+            if third is True:
+                print("Аккаунт удален")
+            else:
+                print("Вы не смогли удалить аккаунт")
         if command == 4:
-            db.change_password()
+            fourth = db.change_password()
+            if fourth is True:
+                print("Пароль изменен успешно")
+            else:
+                print("Вы не смогли изменить пароль")
         if command == 5:
             print("Осуществляется выход")
             exit(0)
