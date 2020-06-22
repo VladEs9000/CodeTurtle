@@ -44,14 +44,6 @@ def Atkins(limit: int, s1: int, s2: int, s3: int):
                 print(x)
                 t = time.time()
                 t = int()
-    for x in range(5, int(math.sqrt(limit))):
-        if sieve[x]:
-            for y in range(x ** 2, limit + 1, x ** 2):
-                sieve[y] = False
-            if int(time.time())-t == 9:
-                print(x)
-                t = time.time()
-                t = int(t)
     bar.finish()
     print(status + '\n')
     with open(way, "w", encoding='utf-7') as file_atk:
@@ -66,8 +58,8 @@ def read_files() -> list:
         first_read = file_1.read()
         list_1 = first_read.split("\n")
     with open('second.txt', 'r', encoding='utf-8') as file_2:
-            first_read = file_2.read()
-            list_2 = first_read.split("\n")
+        first_read = file_2.read()
+        list_2 = first_read.split("\n")
     with open('third.txt', 'r', encoding='utf-8') as file_3:
         first_read = file_3.read()
         list_3 = first_read.split("\n")
@@ -95,6 +87,10 @@ def read_files() -> list:
                 pass
             else:
                 list_4[id] = id
+    for x in range(5, int(math.sqrt(len(list_123)))):
+        if list_4[x]:
+            for y in range(x ** 2, limit + 1, x ** 2):
+                list_4[y] = False
     return list_4
 
 
@@ -146,4 +142,3 @@ if __name__ == '__main__':
         print("Неправильный аргумент")
     except BaseException:
         print("Вы нажали на Ctrl + C")
-
