@@ -81,29 +81,29 @@ class Ui_MainWindow(object):
         self.OpenFile.setText(_translate("MainWindow", "Открыть Папку"))
         self.AnalizFile.setText(_translate("MainWindow", "Анализ Папки"))
         self.label.setText(_translate("MainWindow", "П\n"
-"р\n"
-"о\n"
-"г\n"
-"р\n"
-"е\n"
-"с\n"
-"с\n"
-" \n"
-"а\n"
-"н\n"
-"а\n"
-"л\n"
-"и\n"
-"з\n"
-"а\n"
-" \n"
-"ф\n"
-"а\n"
-"й\n"
-"л\n"
-"а"))
+                                                    "р\n"
+                                                    "о\n"
+                                                    "г\n"
+                                                    "р\n"
+                                                    "е\n"
+                                                    "с\n"
+                                                    "с\n"
+                                                    " \n"
+                                                    "а\n"
+                                                    "н\n"
+                                                    "а\n"
+                                                    "л\n"
+                                                    "и\n"
+                                                    "з\n"
+                                                    "а\n"
+                                                    " \n"
+                                                    "ф\n"
+                                                    "а\n"
+                                                    "й\n"
+                                                    "л\n"
+                                                    "а"))
         self.serchLogin.setText(_translate("MainWindow", "Поиск по логину"))
         self.serchData.setText(_translate("MainWindow", "Поиск по дате"))
-        self.comboBox.setItemText(0, _translate("MainWindow", "Все элементы"))
+        self.comboBox.setItemText(0, _translate("MainWindow", "1 - ая сотня элементов"))
         self.saveData.setText(_translate("MainWindow", "Сохранить данные"))
         self.dateTimeEdit.setDisplayFormat(_translate("MainWindow", "dd.MM.yyyy H:mm:ss"))

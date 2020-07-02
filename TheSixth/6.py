@@ -6,10 +6,12 @@ import multiprocessing as mlp
 from Test import Ui_MainWindow
 from PySide2 import QtCore, QtWidgets
 
+
 class SyncObj(QtCore.QObject):
     progressBarUpdated = QtCore.Signal(int)
-    tableUpdatedRow = QtCore.Signal((int, int ,list))
+    tableUpdatedRow = QtCore.Signal((int, int, list))
     tableUpdatedHeader = QtCore.Signal(int)
+
 
 class MyWin(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
@@ -56,14 +58,14 @@ class MyWin(QtWidgets.QMainWindow):
             self.data_array.clear()
         if self.data_array != []:
             self.login_array.clear()
-        miim = 0
-        maam = len(solo_data) - 2
+        #miim = 0
+        #maam = len(solo_data) - 2
         id = self.ui.comboBox.currentIndex()
         count_box = self.ui.comboBox.count()
-        for i in range(1, count_box):
+        for i in range(count_box):
             if id == i:
-                miim = (i - 1) * 100
-                maam = i * 100 - 1
+                miim = i * 100
+                maam = (i+1) * 100 - 1
         ost = len(solo_data) % 100
         count_id = len(solo_data) - ost
         count_id = int(count_id / 100)
@@ -78,8 +80,8 @@ class MyWin(QtWidgets.QMainWindow):
         c = self.ui.comboBox.count()
         if c > 1:
             self.ui.comboBox.clear()
-            self.ui.comboBox.addItem("Все элементы")
-        for i in range(count_id):
+            self.ui.comboBox.addItem("1 - ая сотня элементов")
+        for i in range(1, count_id):
             self.ui.comboBox.addItem("{0} - ая сотня элементов".format(i + 1))
         self.ui.comboBox.addItem("Последнии элементы")
         self.callback_obj.progressBarUpdated.emit(value + 1)
@@ -197,7 +199,7 @@ class MyWin(QtWidgets.QMainWindow):
             return 2
         list_dir = os.listdir(path_file)
         csv_files = []
-        for i in range(len(list_dir) - 1):
+        for i in range(len(list_dir)):
             get_path = os.path.join(path_file, list_dir[i])
             chek = os.path.isfile(get_path)
             if chek:
@@ -205,9 +207,7 @@ class MyWin(QtWidgets.QMainWindow):
                 if sp_file[-1] == 'csv':
                     csv_files.append(get_path)
         if len(csv_files) == 0:
-            QtWidgets.QMessageBox.about(self, 'Ошибка', 'Не найдены .csv файлы')
-            self.ui.PathFile.setText('')
-            return 2
+            QtWidgets.QMessageBox.about(self, 'Ошибка', 'Ненайденны csv файлы')
         self.my_pool.apply_async(func=read_ddir, args=(csv_files,), callback=self.set_data)
 
 
@@ -215,7 +215,7 @@ def read_ddir(csv_files):
     all_data = []
     for i in range(len(csv_files)):
         with open(csv_files[i], 'r')as csv_file:
-            reader = csv.reader(csv_file)
+            reader = csv.reader(csv_file)  # reader - список списсков
             data = list(reader)
         all_data.append(data)
     solo_data = list.copy(all_data[0])
