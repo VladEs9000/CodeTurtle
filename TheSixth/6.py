@@ -22,6 +22,7 @@ class MyWin(QtWidgets.QMainWindow):
         self.login_array = []
         self.data_array = []
         self.ui.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.ui.PathFile.setReadOnly(True)
         self.ui.OpenFile.clicked.connect(self.OpenFile)
         self.ui.AnalizFile.clicked.connect(self.full_pool)
         self.ui.serchLogin.clicked.connect(self.serch_Login)
@@ -58,14 +59,14 @@ class MyWin(QtWidgets.QMainWindow):
             self.data_array.clear()
         if self.data_array != []:
             self.login_array.clear()
-        #miim = 0
-        #maam = len(solo_data) - 2
+        miim = 0
+        maam = 99
         id = self.ui.comboBox.currentIndex()
         count_box = self.ui.comboBox.count()
         for i in range(count_box):
             if id == i:
                 miim = i * 100
-                maam = (i+1) * 100 - 1
+                maam = (i + 1) * 100 - 1
         ost = len(solo_data) % 100
         count_id = len(solo_data) - ost
         count_id = int(count_id / 100)
@@ -77,19 +78,22 @@ class MyWin(QtWidgets.QMainWindow):
             self.callback_obj.progressBarUpdated.emit(value)
             if miim <= i <= maam:
                 self.callback_obj.tableUpdatedRow.emit(i, miim, row)
-        c = self.ui.comboBox.count()
-        if c > 1:
+
+        if count_box > 1:
             self.ui.comboBox.clear()
             self.ui.comboBox.addItem("1 - ая сотня элементов")
+            self.ui.comboBox.setCurrentIndex(0)
         for i in range(1, count_id):
             self.ui.comboBox.addItem("{0} - ая сотня элементов".format(i + 1))
         self.ui.comboBox.addItem("Последнии элементы")
         self.callback_obj.progressBarUpdated.emit(value + 1)
         self.callback_obj.progressBarUpdated.emit(0)
-        self.chek = True
         self.save_array = list.copy(solo_data)
+        self.unlocker()
+        self.chek = True
 
     def serch_Login(self):
+        self.locker()
         if self.data_array != []:
             self.data_array.clear()
         if self.chek:
@@ -117,14 +121,19 @@ class MyWin(QtWidgets.QMainWindow):
                             p += 1
                     self.callback_obj.progressBarUpdated.emit(value + 1)
                     self.callback_obj.progressBarUpdated.emit(0)
+                    self.unlocker()
                 else:
                     QtWidgets.QMessageBox.about(self, 'Ошибка', 'Логина не найдено.')
+                    self.unlocker()
             else:
                 QtWidgets.QMessageBox.about(self, 'Ошибка', 'Введите логин.')
+                self.unlocker()
         else:
             QtWidgets.QMessageBox.about(self, 'Ошибка', 'Проанализируйте файл.')
+            self.unlocker()
 
     def serch_Data(self):
+        self.locker()
         if self.login_array != []:
             self.login_array.clear()
         if self.chek:
@@ -159,13 +168,17 @@ class MyWin(QtWidgets.QMainWindow):
                         p += 1
                 self.callback_obj.progressBarUpdated.emit(value + 1)
                 self.callback_obj.progressBarUpdated.emit(0)
+                self.unlocker()
                 pass
             else:
                 QtWidgets.QMessageBox.about(self, 'Ошибка', 'Дата не найдена')
+                self.unlocker()
         else:
             QtWidgets.QMessageBox.about(self, 'Ошибка', 'Проанализируйте файл')
+            self.unlocker()
 
     def save_Data(self):
+        self.locker()
         header = ['begin', 'end', 'time interval', 'login', 'mac ab', 'ULSK1', 'BRAS ip', 'start count', 'alive count',
                   'stop count', 'incoming', 'outcoming', 'error_count', 'code 0', 'code 1011', 'code 1100', 'code -3',
                   'code -52', 'code -42', 'code -21', 'code -40', ' code -44', 'code -46', ' code -38']
@@ -175,6 +188,7 @@ class MyWin(QtWidgets.QMainWindow):
                                                   "Файл Microsoft Excel (*.csv)")
         if d[0] == '':
             QtWidgets.QMessageBox.about(self, 'Ошибка', 'Вы отменили сохранение')
+            self.unlocker()
             return 1
         value = 0
         with open(d[0], 'w', newline='') as file_csv:
@@ -190,12 +204,15 @@ class MyWin(QtWidgets.QMainWindow):
                 writher.writerow(save)
         self.callback_obj.progressBarUpdated.emit(value + 1)
         self.callback_obj.progressBarUpdated.emit(0)
+        self.unlocker()
 
     def full_pool(self):
+        self.locker()
         path_file = self.ui.PathFile.text()
         if os.path.exists(path_file) is False:
             QtWidgets.QMessageBox.about(self, 'Ошибка', 'Введите путь')
             self.ui.PathFile.setText('')
+            self.unlocker()
             return 2
         list_dir = os.listdir(path_file)
         csv_files = []
@@ -206,9 +223,25 @@ class MyWin(QtWidgets.QMainWindow):
                 sp_file = list_dir[i].split('.')
                 if sp_file[-1] == 'csv':
                     csv_files.append(get_path)
+
         if len(csv_files) == 0:
             QtWidgets.QMessageBox.about(self, 'Ошибка', 'Ненайденны csv файлы')
+            self.unlocker()
         self.my_pool.apply_async(func=read_ddir, args=(csv_files,), callback=self.set_data)
+
+    def locker(self):
+        self.ui.AnalizFile.setDisabled(True)
+        self.ui.saveData.setDisabled(True)
+        self.ui.serchData.setDisabled(True)
+        self.ui.serchLogin.setDisabled(True)
+        self.ui.OpenFile.setDisabled(True)
+
+    def unlocker(self):
+        self.ui.AnalizFile.setDisabled(False)
+        self.ui.saveData.setDisabled(False)
+        self.ui.serchData.setDisabled(False)
+        self.ui.serchLogin.setDisabled(False)
+        self.ui.OpenFile.setDisabled(False)
 
 
 def read_ddir(csv_files):
